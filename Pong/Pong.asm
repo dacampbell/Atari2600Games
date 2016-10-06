@@ -64,6 +64,7 @@ VerticalBlank
     ldx #0
 Picture
     sta WSYNC              ; wait till end of scanline
+    inx
     cpx #192
     bne Picture
 
