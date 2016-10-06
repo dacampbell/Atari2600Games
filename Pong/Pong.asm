@@ -56,35 +56,23 @@ VerticalBlank
     bne VerticalBlank
 
 ;------------------------------------------------
-; Handle a change in the pattern once every 20 frames
-; and write the pattern to the PF1 register
-    iny                    ; increment speed count by one
-    cpy #TIMETOCHANGE      ; has it reached our "change point"?
-    bne notyet             ; no, so branch past
-    ldy #0                 ; reset speed count
-    inc PATTERN            ; switch to next pattern
-
-notyet
-    lda PATTERN            ; use our saved pattern
-    sta PF1                ; as the playfield shape
-
-;------------------------------------------------
 ; Do 192 scanlines of color-changing (our picture)
-    ldx #0                 ; this counts our scanline number
-
-Picture
+    ldx #80                 ; this counts our scanline number
     stx COLUBK             ; change background color (rainbow effect)
+
+; Zero x and then enter into the picture loop
+    ldx #0
+Picture
     sta WSYNC              ; wait till end of scanline
-    inx
     cpx #192
     bne Picture
 
-;------------------------------------------------
+;-------------------------------------------------------------------------------
 
     lda #%01000010
     sta VBLANK          ; end of screen - enter blanking
 
-; 30 scanlines of overscan..., do not render anything to them for now..
+; 30 scanlines of overscan...,
     ldx #0
 
 Overscan
@@ -95,7 +83,7 @@ Overscan
 
     jmp StartOfFrame
 
-;------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
 ; This is the entry point of the progrm for the Pong Game
     ORG $FFFA
 
