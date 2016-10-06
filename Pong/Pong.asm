@@ -23,6 +23,7 @@ Clear
 
 ; Set the color of the ball we are going to be using throughout the pong Game
     ldx #$0E
+    stx COLUPF
 
 ; Start of new frame
 ; Start of vertical blank processing
@@ -40,9 +41,13 @@ StartOfFrame
 ;------------------------------------------------
 ; 37 scanlines of vertical blank...
     ldx #0
+    ldy #1
+    lda #100
+    sty ENABL
 
 VerticalBlank
     sta WSYNC
+    sta RESBL
     inx
     cpx #37
     bne VerticalBlank
