@@ -21,17 +21,9 @@ Clear
     inx
     bne Clear
 
-;------------------------------------------------
-; Once-only initialization...
-    lda #0
-    sta PATTERN            ; The binary PF 'pattern'
+; Set the color of the ball we are going to be using throughout the pong Game
+    ldx #$0E
 
-    lda #$45
-    sta COLUPF             ; set the playfield color
-
-    ldy #0                 ; "speed" counter
-
-;------------------------------------------------
 ; Start of new frame
 ; Start of vertical blank processing
 StartOfFrame
@@ -57,7 +49,7 @@ VerticalBlank
 
 ;------------------------------------------------
 ; Do 192 scanlines of color-changing (our picture)
-    ldx #80                 ; this counts our scanline number
+    ldx #$00                ; this counts our scanline number
     stx COLUBK             ; change background color (rainbow effect)
 
 ; Zero x and then enter into the picture loop
@@ -70,7 +62,7 @@ Picture
 
 ;-------------------------------------------------------------------------------
 
-    lda #%01000010
+    ;lda #%01000010
     sta VBLANK          ; end of screen - enter blanking
 
 ; 30 scanlines of overscan...,
