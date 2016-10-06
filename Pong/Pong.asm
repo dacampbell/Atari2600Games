@@ -5,7 +5,14 @@
     SEG
     ORG $F000
 
+; Condensed initialization of the tia
 Reset
+        ldx #0
+        txa
+Clear   dex
+        txs
+        pha
+        bne Clear
 
 StartOfFrame
 
