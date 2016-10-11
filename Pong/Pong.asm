@@ -5,8 +5,7 @@
     include "macro.h"
 
 ;------------------------------------------------------------------------------
-PATTERN         = $80                  ; storage location (1st byte in RAM)
-TIMETOCHANGE    = 20                   ; speed of "animation" - change as desired
+NO_ILLEGAL_OPCODES = 1
 ;------------------------------------------------------------------------------
     SEG
     ORG $F000
@@ -14,15 +13,16 @@ TIMETOCHANGE    = 20                   ; speed of "animation" - change as desire
 Reset
 ; Clear RAM and all TIA registers
     ldx #0
+    ldy #0
     lda #0
 
 Clear
-    sta 0,x
+    sta 0
     inx
     bne Clear
 
 ; Set the color of the ball we are going to be using throughout the pong Game
-    ldx #$0E
+    ldx #$5E
     stx COLUPF
 
 ; Start of new frame
@@ -41,27 +41,31 @@ StartOfFrame
 ;------------------------------------------------
 ; 37 scanlines of vertical blank...
     ldx #0
-    ldy #1
-    lda #100
+    ldy #$FF
+    lda #$10
     sty ENABL
 
 VerticalBlank
     sta WSYNC
-    sta RESBL
     inx
     cpx #37
     bne VerticalBlank
 
-;------------------------------------------------
 ; Do 192 scanlines of color-changing (our picture)
     ldx #$00                ; this counts our scanline number
     stx COLUBK             ; change background color (rainbow effect)
 
 ; Zero x and then enter into the picture loop
     ldx #0
+    ldy #1
 Picture
-    sta WSYNC              ; wait till end of scanline
+
+    ; This loop is to wait to render the bakk in the middle of the screen
+    SLEEP 20
+    sty RESBL
+
     inx
+    sta WSYNC              ; wait till end of scanline
     cpx #192
     bne Picture
 
